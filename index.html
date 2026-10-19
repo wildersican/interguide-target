@@ -1533,18 +1533,6 @@ function evaluateRejections(chkCount, weightBefore, weightAfter, prodCharStr) {
         rejectionContainer.style.border = '1px solid #ef9a9a';
         rejectionContainer.style.padding = '12px';
         rejectionContainer.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
-
-        if (alerts.every(a => a.includes('BOM File'))) {
-            const note = document.createElement('div');
-            note.className = 'bom-alert-note';
-            note.style.marginTop = '10px';
-            note.style.fontSize = '11px';
-            note.style.color = '#64748b';
-            note.style.fontWeight = 'normal';
-            note.style.whiteSpace = 'nowrap';
-            note.innerHTML = '<i class="fas fa-info-circle" style="cursor:help; color:#ef4444;" title="Puedes proceder con el ingreso, pero por favor registra este rechazo"></i> Note: You may proceed with registration, but please log this rejection.';
-            alertBox.appendChild(note);
-        }
     } else {
         alertBox.style.display = 'none';
         alertBox.innerHTML = '';
@@ -4423,7 +4411,7 @@ async function procesarArchivoBOM() {
             const rejectionContainer = document.getElementById('rejection-container');
             if (alertBox) {
                 // Clear previous BOM alerts
-                alertBox.querySelectorAll('.bom-alert-item, .bom-alert-note').forEach(e => e.remove());
+                alertBox.querySelectorAll('.bom-alert-item').forEach(e => e.remove());
 
                 if (bomAlerts.length > 0) {
                     let existingUl = alertBox.querySelector('ul');
@@ -4447,25 +4435,6 @@ async function procesarArchivoBOM() {
                         li.innerHTML = `<strong>BOM ERROR:</strong> ${a.text}`;
                         existingUl.appendChild(li);
                     });
-
-                    let isOnlyBom = true;
-                    Array.from(existingUl.children).forEach(li => {
-                        if (!li.textContent.includes('BOM File') && !li.classList.contains('bom-alert-item')) {
-                            isOnlyBom = false;
-                        }
-                    });
-
-                    if (isOnlyBom && !alertBox.querySelector('.bom-alert-note')) {
-                        const note = document.createElement('div');
-                        note.className = 'bom-alert-note';
-                        note.style.marginTop = '10px';
-                        note.style.fontSize = '11px';
-                        note.style.color = '#64748b';
-                        note.style.fontWeight = 'normal';
-                        note.style.whiteSpace = 'nowrap';
-                        note.innerHTML = '<i class="fas fa-info-circle" style="cursor:help; color:#ef4444;" title="Puedes proceder con el ingreso, pero por favor registra este rechazo"></i> Note: You may proceed with registration, but please log this rejection.';
-                        alertBox.appendChild(note);
-                    }
                 } else if (alertBox.querySelectorAll('li').length === 0) {
                     // Reset if totally empty
                     alertBox.style.display = 'none';
