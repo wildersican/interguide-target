@@ -74,8 +74,6 @@ const motivosManuales = [
     "Selección de varios paquetes/Error (Multiple Package Selection / Error)",
     "Actualizar Versión de PFAS (Update PFAS Version)",
     "Actualizar Certificado de Fibra - Vencido (Update Fiber Certificate - Expired)",
-    "BOM Number no coincide con la ETRF (BOM Number Does Not Match ETRF)",
-    "BOM RD Number no se encuentra en la ETRF (BOM RD Number Not Found in ETRF)",
     "Reporte previo de RFID  Vencido, Actualizar / Previous RFID report expired; please update",
     "Reporte previo de Joker Label  Vencido, Actualizar / Previous Joker Label report expired; please update",
     "Reporte previo de Care Label  Vencido, Actualizar / Previous Care Label report expired; please update",
@@ -107,7 +105,7 @@ const motivosManuales = [
     "Falta Certificado de Trademark Label (Trademark Label Certificate of Compliance - Not Uploaded to the platform)",
     "Número de BOM en ETRF no coincide con archivo adjunto / BOM number in ETRF does not match the attached file",
     "Archivo BOM no adjunto / BOM file not attached",
-    "RD Fabric en ETRF no coincide con el archivo BOM / RD Fabric in ETRF does not match the the BOM file",
+    "RD Fabric en ETRF no coincide con el archivo BOM / RD Fabric in ETRF does not match the BOM file",
     "RD de CARE LABEL en ETRF no coincide con el archivo BOM / CARE LABEL RD in ETRF does not match the BOM file",
     "RD de JOKER LABEL en ETRF no coincide con el archivo BOM / JOKER LABEL RD in ETRF does not match the BOM file",
     "RD de RFID en ETRF no coincide con el archivo BOM / RFID RD in ETRF does not match the BOM file",
@@ -298,11 +296,11 @@ function openRejectionModal() {
         const bomResult = document.getElementById('resultados-bom-container');
         if (bomResult) {
             if (bomResult.innerHTML.includes('BOM NUMBER MISMATCH (FAIL)')) {
-                const bomReason = "BOM Number no coincide con la ETRF (BOM Number Does Not Match ETRF)";
+                const bomReason = "Número de BOM en ETRF no coincide con archivo adjunto / BOM number in ETRF does not match the attached file";
                 if (!currentRejectionReasons.includes(bomReason)) currentRejectionReasons.push(bomReason);
             }
             if (bomResult.innerHTML.includes('NO BOM RDs FOUND IN ETRF (FAIL)')) {
-                const rdBomReason = "BOM RD Number no se encuentra en la ETRF (BOM RD Number Not Found in ETRF)";
+                const rdBomReason = "RD Fabric en ETRF no coincide con el archivo BOM / RD Fabric in ETRF does not match the BOM file";
                 if (!currentRejectionReasons.includes(rdBomReason)) currentRejectionReasons.push(rdBomReason);
             }
         }
@@ -341,7 +339,7 @@ function openRejectionModal() {
             'MISSING BOM File': 'Archivo BOM no adjunto / BOM file not attached'
         };
 
-        // Check Rejection Alerts panel
+        // Check Rejection Grounds panel
         const alertBox = document.getElementById('rejection-alerts');
         if (alertBox && alertBox.style.display !== 'none') {
             const lis = alertBox.querySelectorAll('li');

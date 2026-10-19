@@ -4361,7 +4361,7 @@ async function procesarArchivoBOM() {
                 }
 
                 if (missingInBom && missingInBom.length > 0) {
-                    const r = "RD Fabric no coincide al descrito en ETRF / RD Fabric does not match the description in ETRF";
+                    const r = "RD Fabric en ETRF no coincide con el archivo BOM / RD Fabric in ETRF does not match the BOM file";
                     if (!currentRejectionReasons.includes(r)) { currentRejectionReasons.push(r); shouldRender = true; }
                 }
 
@@ -4378,7 +4378,7 @@ async function procesarArchivoBOM() {
                 if (invalidSupplierTrims && invalidSupplierTrims.length > 0) {
                     invalidSupplierTrims.forEach(rd => {
                         let desc = window.globalTrimDescriptions && window.globalTrimDescriptions[rd] ? window.globalTrimDescriptions[rd] : 'TRIM';
-                        const r = `Supplier de ${desc} no válido o en blanco / ${desc} Supplier invalid or blank`;
+                        const r = `Supplier de ${desc} no válido o campo vacío / ${desc} Supplier invalid or empty field`;
                         if (!currentRejectionReasons.includes(r)) { currentRejectionReasons.push(r); shouldRender = true; }
                     });
                 }
@@ -4392,7 +4392,7 @@ async function procesarArchivoBOM() {
                 bomAlerts.push({ text: "BOM number in ETRF does not match the attached file", reason: "Número de BOM en ETRF no coincide con archivo adjunto / BOM number in ETRF does not match the attached file" });
             }
             if (missingInBom && missingInBom.length > 0) {
-                bomAlerts.push({ text: "RD Fabric does not match the description in ETRF", reason: "RD Fabric no coincide al descrito en ETRF / RD Fabric does not match the description in ETRF" });
+                bomAlerts.push({ text: "RD Fabric does not match the description in ETRF", reason: "RD Fabric en ETRF no coincide con el archivo BOM / RD Fabric in ETRF does not match the BOM file" });
             }
             if (missingTrimInBom && missingTrimInBom.length > 0) {
                 missingTrimInBom.forEach(rd => {
@@ -4403,7 +4403,7 @@ async function procesarArchivoBOM() {
             if (invalidSupplierTrims && invalidSupplierTrims.length > 0) {
                 invalidSupplierTrims.forEach(rd => {
                     let desc = window.globalTrimDescriptions && window.globalTrimDescriptions[rd] ? window.globalTrimDescriptions[rd] : 'TRIM';
-                    bomAlerts.push({ text: `${desc} Supplier invalid or blank`, reason: `Supplier de ${desc} no válido o en blanco / ${desc} Supplier invalid or blank` });
+                    bomAlerts.push({ text: `${desc} Supplier invalid or empty field`, reason: `Supplier de ${desc} no válido o campo vacío / ${desc} Supplier invalid or empty field` });
                 });
             }
 
