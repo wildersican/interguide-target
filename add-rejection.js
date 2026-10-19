@@ -76,8 +76,13 @@ const motivosManuales = [
     "Actualizar Certificado de Fibra - Vencido (Update Fiber Certificate - Expired)",
     "BOM Number no coincide con la ETRF (BOM Number Does Not Match ETRF)",
     "BOM RD Number no se encuentra en la ETRF (BOM RD Number Not Found in ETRF)",
-    
-    // --- Warnings / Próximos Rechazos ---
+    "Reporte previo de RFID  Vencido, Actualizar / Previous RFID report expired; please update",
+    "Reporte previo de Joker Label  Vencido, Actualizar / Previous Joker Label report expired; please update",
+    "Reporte previo de Care Label  Vencido, Actualizar / Previous Care Label report expired; please update",
+    "Reporte previo de Main Label  Vencido, Actualizar / Previous Main Label report expired; please update",
+    "Reporte previo de Heat Transfer  Vencido, Actualizar / Previous Heat Transfer report expired; please update",
+
+    // --- Certificados de Cumplimiento y BOM (Rechazos Oficiales) ---
     "RD Number de Certificado de Care Label no coincide con la ETRF (Care Label Certificate of Compliance RD Number Does Not Match ETRF)",
     "RD Number de Certificado de Joker Label no coincide con la ETRF (Joker Label Certificate of Compliance RD Number Does Not Match ETRF)",
     "RD Number de Certificado de RFID no coincide con la ETRF (RFID Certificate of Compliance RD Number Does Not Match ETRF)",
@@ -526,72 +531,11 @@ async function submitRejectionToPA(skipAuth = false) {
         if (formIdInput) formIdInput.focus();
         return;
     }
-    const warningKeywords = [
-        "Número de BOM en ETRF no coincide con archivo",
-        "Archivo BOM no adjunto",
-        "RD Fabric no coincide al descrito en ETRF",
-        "RD de CARE LABEL en ETRF no coincide",
-        "RD de JOKER LABEL en ETRF no coincide",
-        "RD de RFID en ETRF no coincide",
-        "RD de HEAT TRANSFER en ETRF no coincide",
-        "RD de MOBILON en ETRF no coincide",
-        "RD de WOVEN LABEL en ETRF no coincide",
-        "RD de MAIN LABEL en ETRF no coincide",
-        "RD de CLAMP LABEL en ETRF no coincide",
-        "Supplier de CARE LABEL no válido",
-        "Supplier de JOKER LABEL no válido",
-        "Supplier de RFID no válido",
-        "Supplier de HEAT TRANSFER no válido",
-        "Supplier de MOBILON no válido",
-        "Supplier de WOVEN LABEL no válido",
-        "Supplier de MAIN LABEL no válido",
-        "Supplier de CLAMP LABEL no válido",
-        "Falta Certificado de Care Label",
-        "Falta Certificado de Joker Label",
-        "Falta Certificado de RFID",
-        "Falta Certificado de Heat Transfer",
-        "Falta Certificado de Mobilon",
-        "Falta Certificado de Woven Label",
-        "Falta Certificado de Main Label",
-        "Falta Certificado de Clamp Label",
-        "Falta Certificado de PO Label",
-        "Falta Certificado de Size Label",
-        "Falta Certificado de Trademark Label",
-        "RD Number de Certificado de Care Label",
-        "RD Number de Certificado de Joker Label",
-        "RD Number de Certificado de RFID",
-        "RD Number de Certificado de Heat Transfer",
-        "RD Number de Certificado de Mobilon",
-        "RD Number de Certificado de Woven Label",
-        "RD Number de Certificado de Main Label",
-        "RD Number de Certificado de Clamp Label",
-        "RD Number de Certificado de PO Label",
-        "RD Number de Certificado de Size Label",
-        "RD Number de Certificado de Trademark Label"
-    ];
+    const allReasons = currentRejectionReasons
+        .map(r => '\u2022 ' + r.replace(/^- /, ''))
+        .join('<br>');
 
-    let trueRejections = [];
-    let warnings = [];
-
-    currentRejectionReasons.forEach(r => {
-        const cleanReason = r.replace(/^- /, '');
-        const isWarning = warningKeywords.some(keyword => cleanReason.includes(keyword));
-        if (isWarning) {
-            warnings.push('\u2022 ' + cleanReason);
-        } else {
-            trueRejections.push('\u2022 ' + cleanReason);
-        }
-    });
-
-    if (warnings.length > 0) {
-        const note = '<span style="color: #666666; font-size: 13px;"><i><b>Note:</b> Please note that these alerts will become formal rejection reasons starting October 19th.<br>(Por favor tome en cuenta que estas alertas se convertirán en motivos de rechazo formales a partir del 19 de octubre.)</i></span>';
-        warnings.push('<br>' + note);
-    }
-
-    const allReasons = trueRejections.join('<br>');
-    const allWarnings = warnings.join('<br>');
-
-        const payload = {
+    const payload = {
         fechaRechazo: new Date().toLocaleDateString('en-GB'),
         sitio: 'ITKSITE2',
         tecnico: currentUser || 'N/A',
@@ -601,7 +545,7 @@ async function submitRejectionToPA(skipAuth = false) {
         description: document.getElementById('rej-desc').value || 'N/A',
         vendor: document.getElementById('rej-vendor').value || 'N/A',
         reason: allReasons.trim() || 'N/A',
-        warnings: allWarnings.trim() || '', // Nuevo campo separado
+        warnings: '', // Todas las alertas ahora son motivos de rechazo oficiales
         correos: document.getElementById('rej-emails').value || 'N/A'
     };
 

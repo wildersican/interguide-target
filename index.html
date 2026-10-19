@@ -5067,6 +5067,7 @@ function procesarDataTrackerCloud(jsonData) {
             return clean.includes('tecnico') || clean.includes('user') || k.toLowerCase().includes('cnico');
         });
         const keyStyle = keys.find(k => k.toLowerCase().includes('style') || k.toLowerCase().includes('estilo'));
+        const keyWarning = keys.find(k => k.toLowerCase().includes('warning') || k.toLowerCase().includes('alerta'));
 
         function formatExcelDate(val) {
             if (!val) return '';
@@ -5119,10 +5120,22 @@ function procesarDataTrackerCloud(jsonData) {
                 } catch(e) {}
             }
 
-            // Filtrar los que son únicamente alertas (motivo N/A, vacío o no aplicable)
+            // Si el motivo es N/A o vacío pero existían alertas registradas, se convierten en rechazos oficiales
             const cleanReasonCheck = reason.toUpperCase().replace(/[\s\.\-_•\/]/g, '');
             if (!reason || cleanReasonCheck === 'NA' || cleanReasonCheck === 'NONE' || cleanReasonCheck === 'NULL' || cleanReasonCheck === 'UNDEFINED') {
-                return;
+                if (keyWarning && row[keyWarning]) {
+                    let wReason = String(row[keyWarning]).trim();
+                    wReason = wReason.replace(/<span[^>]*>.*?<\/span>/gi, '')
+                                     .replace(/<br\s*[\/]?>/gi, ', ')
+                                     .replace(/^[\s,•\.-]+|[\s,•\.-]+$/g, '');
+                    if (wReason) {
+                        reason = wReason;
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
             }
 
             const groupKey = vendor + "|||" + rawEmails;
